@@ -8,6 +8,7 @@
 <meta property="og:title" content="Ujjwal Reddy — AI/ML Engineer" />
 <meta property="og:description" content="Agentic AI & RAG · Computer Vision · High-Performance Systems" />
 <meta property="og:type" content="website" />
+<script>document.documentElement.classList.add("js");</script>
 <style>
   :root {
     --bg: #0a0a0f;
@@ -21,7 +22,6 @@
     --maxw: 1000px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
   body {
     background: var(--bg);
     color: var(--text);
@@ -32,13 +32,33 @@
   a { color: inherit; text-decoration: none; }
   ::selection { background: var(--accent); color: #fff; }
 
+  /* Lenis smooth-scroll */
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+  .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+  .lenis.lenis-stopped { overflow: hidden; }
+  html:not(.js) { scroll-behavior: smooth; }
+
+  /* scroll progress bar */
+  .progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 2px;
+    width: 100%;
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    z-index: 50;
+  }
+
   .glow {
     position: fixed;
-    inset: 0;
+    inset: -10% -10% 0 -10%;
     z-index: -1;
     background:
       radial-gradient(600px circle at 15% 8%, rgba(124,92,255,0.18), transparent 55%),
       radial-gradient(520px circle at 85% 26%, rgba(0,224,198,0.12), transparent 50%);
+    will-change: transform;
   }
 
   header {
@@ -59,8 +79,17 @@
   }
   nav .brand { font-weight: 700; letter-spacing: -0.02em; }
   nav .links { display: flex; gap: 20px; font-size: 14px; }
-  nav .links a { color: var(--muted); transition: color .2s; }
+  nav .links a { color: var(--muted); transition: color .2s; position: relative; }
   nav .links a:hover { color: var(--text); }
+  nav .links a.active { color: var(--text); }
+  nav .links a.active::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: -6px;
+    height: 2px;
+    background: var(--accent);
+    border-radius: 2px;
+  }
   @media (max-width: 720px) { nav .links { display: none; } }
 
   main { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
@@ -118,7 +147,9 @@
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 20px;
+    transition: transform .18s, border-color .2s;
   }
+  .skillcat:hover { transform: translateY(-3px); border-color: var(--accent); }
   .skillcat h3 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent-2); margin-bottom: 12px; }
   .chips { display: flex; flex-wrap: wrap; gap: 8px; }
   .chip {
@@ -187,7 +218,9 @@
     border-radius: 10px;
     padding: 14px 16px;
     font-size: 13.5px;
+    transition: transform .18s, border-color .2s;
   }
+  .cert:hover { transform: translateY(-3px); border-color: var(--accent); }
   .cert .meta { color: var(--muted); font-size: 12px; margin-top: 3px; }
 
   .contact p { color: var(--muted); max-width: 560px; margin-bottom: 24px; }
@@ -203,12 +236,16 @@
 
   footer { max-width: var(--maxw); margin: 0 auto; padding: 40px 24px 60px; color: var(--muted); font-size: 13px; }
 
-  .reveal { opacity: 0; transform: translateY(20px); transition: opacity .6s, transform .6s; }
-  .reveal.in { opacity: 1; transform: none; }
+  /* Elements start visible. GSAP hides + animates them only once it has loaded,
+     so a failed CDN / no-JS / reduced-motion visitor always sees full content. */
+  @media (prefers-reduced-motion: reduce) {
+    .progress { display: none; }
+  }
 </style>
 </head>
 <body>
-<div class="glow"></div>
+<div class="progress" id="progress"></div>
+<div class="glow" id="glow"></div>
 
 <header>
   <nav>
@@ -227,77 +264,77 @@
 
 <section class="hero" id="top">
   <main>
-    <p class="eyebrow">Portfolio</p>
-    <h1>Hi, I'm Ujjwal Reddy.<br /><span class="accent">I build intelligent systems that hold up in the real world.</span></h1>
-    <p class="role">AI/ML Engineer · Agentic AI &amp; RAG · Computer Vision · High-Performance Systems</p>
-    <p class="lead">Final-year AI &amp; ML Engineering student and published IEEE / IJIRT author, working at the intersection of machine intelligence and efficient system design — LLM-powered and agentic applications, RAG pipelines, real-time computer vision, and cross-platform high-performance software.</p>
-    <div class="cta">
-      <a class="btn primary" href="#projects">View Work</a>
-      <a class="btn ghost" href="#contact">Get in Touch</a>
-      <a class="btn ghost" href="resume.pdf" target="_blank" rel="noopener">Résumé (PDF) ↗</a>
-      <a class="btn ghost" href="https://github.com/Ujjwalreddy16" target="_blank" rel="noopener">GitHub ↗</a>
+    <p class="eyebrow anim">Portfolio</p>
+    <h1 class="anim">Hi, I'm Ujjwal Reddy.<br /><span class="accent">I build intelligent systems that hold up in the real world.</span></h1>
+    <p class="role anim">AI/ML Engineer · Agentic AI &amp; RAG · Computer Vision · High-Performance Systems</p>
+    <p class="lead anim">Final-year AI &amp; ML Engineering student and published IEEE / IJIRT author, working at the intersection of machine intelligence and efficient system design — LLM-powered and agentic applications, RAG pipelines, real-time computer vision, and cross-platform high-performance software.</p>
+    <div class="cta anim">
+      <a class="btn primary magnetic" href="#projects">View Work</a>
+      <a class="btn ghost magnetic" href="#contact">Get in Touch</a>
+      <a class="btn ghost magnetic" href="resume.pdf" target="_blank" rel="noopener">Résumé (PDF) ↗</a>
+      <a class="btn ghost magnetic" href="https://github.com/Ujjwalreddy16" target="_blank" rel="noopener">GitHub ↗</a>
     </div>
-    <div class="stats">
-      <div class="stat"><div class="n">2</div><div class="l">Published papers</div></div>
-      <div class="stat"><div class="n">5+</div><div class="l">Shipped projects</div></div>
-      <div class="stat"><div class="n">8.21</div><div class="l">CGPA / 10</div></div>
+    <div class="stats anim">
+      <div class="stat"><div class="n" data-count="2">2</div><div class="l">Published papers</div></div>
+      <div class="stat"><div class="n" data-count="5" data-suffix="+">5+</div><div class="l">Shipped projects</div></div>
+      <div class="stat"><div class="n" data-count="8.21" data-decimals="2">8.21</div><div class="l">CGPA / 10</div></div>
     </div>
   </main>
 </section>
 
 <main>
-  <section class="about reveal" id="about">
-    <p class="eyebrow">About</p>
-    <h2>Who I am</h2>
-    <p>I'm K Ujjwal Reddy, an AI &amp; Machine Learning Engineering student in Bengaluru (B.Tech, VTU, 2022–2026, CGPA 8.21/10). My background spans optimization, intelligent systems, and high-performance computing, and I currently work as an AI/ML Engineer at Tvara building LLM-powered and agentic products.</p>
-    <p>I like problems that sit between machine intelligence and systems engineering: designing an adaptive rendering pipeline for a cross-platform game engine, getting real-time gaze tracking accurate enough to replace a mouse, or building RAG and knowledge-bank pipelines that retrieve the right context under load. I care about work that survives outside a notebook — measured, reproducible, and deployable.</p>
-    <p>Long term, I want to grow as a researcher-engineer advancing domain-specific AI that balances scalability, performance, and adaptability — and I'm aiming for a Master's in Computer Science focused on systems and machine intelligence.</p>
+  <section class="about" id="about">
+    <p class="eyebrow anim">About</p>
+    <h2 class="anim">Who I am</h2>
+    <p class="anim">I'm K Ujjwal Reddy, an AI &amp; Machine Learning Engineering student in Bengaluru (B.Tech, VTU, 2022–2026, CGPA 8.21/10). My background spans optimization, intelligent systems, and high-performance computing, and I currently work as an AI/ML Engineer at Tvara building LLM-powered and agentic products.</p>
+    <p class="anim">I like problems that sit between machine intelligence and systems engineering: designing an adaptive rendering pipeline for a cross-platform game engine, getting real-time gaze tracking accurate enough to replace a mouse, or building RAG and knowledge-bank pipelines that retrieve the right context under load. I care about work that survives outside a notebook — measured, reproducible, and deployable.</p>
+    <p class="anim">Long term, I want to grow as a researcher-engineer advancing domain-specific AI that balances scalability, performance, and adaptability — and I'm aiming for a Master's in Computer Science focused on systems and machine intelligence.</p>
   </section>
 
-  <section class="skills reveal" id="skills">
-    <p class="eyebrow">Toolbox</p>
-    <h2>Skills &amp; Technologies</h2>
+  <section class="skills" id="skills">
+    <p class="eyebrow anim">Toolbox</p>
+    <h2 class="anim">Skills &amp; Technologies</h2>
     <div class="skillcats">
-      <div class="skillcat">
+      <div class="skillcat anim">
         <h3>Languages</h3>
         <div class="chips"><span class="chip">C++</span><span class="chip">C</span><span class="chip">Python</span><span class="chip">SQL</span><span class="chip">HTML</span><span class="chip">CSS</span></div>
       </div>
-      <div class="skillcat">
+      <div class="skillcat anim">
         <h3>AI / ML</h3>
         <div class="chips"><span class="chip">Machine Learning</span><span class="chip">Deep Learning</span><span class="chip">Computer Vision</span><span class="chip">NLP</span><span class="chip">Generative AI</span><span class="chip">Optimization</span></div>
       </div>
-      <div class="skillcat">
+      <div class="skillcat anim">
         <h3>LLM Engineering</h3>
         <div class="chips"><span class="chip">RAG</span><span class="chip">LLM Applications</span><span class="chip">Agentic AI</span><span class="chip">Prompt Engineering</span><span class="chip">Embeddings</span><span class="chip">Vector Search</span></div>
       </div>
-      <div class="skillcat">
+      <div class="skillcat anim">
         <h3>Frameworks &amp; Libraries</h3>
         <div class="chips"><span class="chip">LangChain</span><span class="chip">PyTorch</span><span class="chip">TensorFlow / Keras</span><span class="chip">Scikit-Learn</span><span class="chip">OpenCV</span><span class="chip">Dlib</span><span class="chip">CUDA</span><span class="chip">YOLOv3</span></div>
       </div>
-      <div class="skillcat">
+      <div class="skillcat anim">
         <h3>Backend &amp; Data</h3>
         <div class="chips"><span class="chip">Node.js</span><span class="chip">Express.js</span><span class="chip">REST APIs</span><span class="chip">PostgreSQL</span><span class="chip">MySQL</span></div>
       </div>
-      <div class="skillcat">
+      <div class="skillcat anim">
         <h3>Tools &amp; Platforms</h3>
         <div class="chips"><span class="chip">Git &amp; GitHub</span><span class="chip">Docker</span><span class="chip">Linux</span><span class="chip">Anaconda</span><span class="chip">Hugging Face</span><span class="chip">Jupyter</span><span class="chip">Visual Studio</span></div>
       </div>
-      <div class="skillcat">
+      <div class="skillcat anim">
         <h3>Systems</h3>
         <div class="chips"><span class="chip">Operating Systems</span><span class="chip">Data Structures &amp; Algorithms</span><span class="chip">High-Performance Rendering</span><span class="chip">DevOps</span></div>
       </div>
-      <div class="skillcat">
+      <div class="skillcat anim">
         <h3>Languages (spoken)</h3>
         <div class="chips"><span class="chip">English</span><span class="chip">Kannada</span><span class="chip">Hindi</span><span class="chip">Telugu</span></div>
       </div>
     </div>
   </section>
 
-  <section class="projects reveal" id="projects">
-    <p class="eyebrow">Selected Work</p>
-    <h2>Projects</h2>
+  <section class="projects" id="projects">
+    <p class="eyebrow anim">Selected Work</p>
+    <h2 class="anim">Projects</h2>
     <div class="grid">
-      <article class="proj">
+      <article class="proj anim">
         <div class="top"><h3>EyeCommand — Gaze &amp; Blink Cursor Control</h3><span class="when">Ongoing</span></div>
         <div class="meta">Team of 4 · Team Lead</div>
         <p>Assistive human–computer interaction system that lets users drive the cursor and click using only eye movement and a standard webcam — an affordable alternative to $1000+ infrared eye-tracking hardware. Built real-time eye tracking with classical CV, gaze-to-cursor mapping logic, and performance tuning for smooth, accurate control.</p>
@@ -309,7 +346,7 @@
         </div>
       </article>
 
-      <article class="proj">
+      <article class="proj anim">
         <div class="top"><h3>Traffic Violation Detection (YOLOv3)</h3><span class="when">Nov 2024</span></div>
         <div class="meta">Team of 4 · Team Lead</div>
         <p>Automated surveillance system detecting signal jumping and helmet-less riding from video. Trained and fine-tuned YOLOv3 on a custom traffic dataset, wired the detector into live video streams, and built a violation logging and alert pipeline.</p>
@@ -320,7 +357,7 @@
         </div>
       </article>
 
-      <article class="proj">
+      <article class="proj anim">
         <div class="top"><h3>GA Path Planner — Adaptive Operators</h3><span class="when">2025</span></div>
         <div class="meta">Independent research → published</div>
         <p>Genetic-algorithm path planner for robot navigation in dynamic grid/maze environments. Introduced adaptive crossover and mutation operators that improve convergence speed and solution accuracy over traditional GA, validated through simulation experiments.</p>
@@ -332,7 +369,7 @@
         </div>
       </article>
 
-      <article class="proj">
+      <article class="proj anim">
         <div class="top"><h3>Pothole Detection &amp; Smart Navigation</h3><span class="when">Mar 2024</span></div>
         <div class="meta">Team of 2 · Team Member</div>
         <p>Road-safety system that detects potholes from images and video using contour and texture analysis, then integrates GPS mapping to suggest safer reroutes for drivers.</p>
@@ -343,7 +380,7 @@
         </div>
       </article>
 
-      <article class="proj">
+      <article class="proj anim">
         <div class="top"><h3>Memory Leak Logger</h3><span class="when">Oct 2024</span></div>
         <div class="meta">Independent project</div>
         <p>Lightweight C++ tool for detecting and logging memory leaks at runtime. Wrote custom allocation/deallocation wrappers with low-overhead logging, validated against sample programs and Valgrind.</p>
@@ -356,26 +393,26 @@
     </div>
   </section>
 
-  <section class="research reveal" id="research">
-    <p class="eyebrow">Independent Research</p>
-    <h2>HyperForge</h2>
-    <div class="pub">
+  <section class="research" id="research">
+    <p class="eyebrow anim">Independent Research</p>
+    <h2 class="anim">HyperForge</h2>
+    <div class="pub anim">
       <h3>Adaptive Cross-Platform Game Engine for High-Performance Rendering</h3>
       <div class="venue">Ongoing</div>
       <p>A cross-platform engine targeting Windows, Linux, and mobile. Its adaptive rendering pipeline dynamically adjusts graphics quality to the host hardware to hold frame rates while maximising visual fidelity. Built on a modular architecture with physics, asset management, and real-time rendering optimizations.</p>
     </div>
   </section>
 
-  <section class="publications reveal" id="publications">
-    <p class="eyebrow">Publications</p>
-    <h2>Published Work</h2>
+  <section class="publications" id="publications">
+    <p class="eyebrow anim">Publications</p>
+    <h2 class="anim">Published Work</h2>
     <div class="pubs">
-      <div class="pub">
+      <div class="pub anim">
         <h3>EyeCommand: Intelligent Gaze &amp; Blink Interface</h3>
         <div class="venue">IEEE Conference · K U. Reddy, K. M, P. V. K. Reddy, V. M. Pathapati, S. Patil</div>
         <p>An assistive computing system for cursor control and click operations using only the eyes and a standard webcam. Delivers a low-cost alternative to infrared eye-tracking hardware (typically $1000+) while keeping practical accuracy and reliability, with a fully open-source implementation for reproducibility and real-world deployment for users with motor impairments.</p>
       </div>
-      <div class="pub">
+      <div class="pub anim">
         <h3>Genetic Algorithm-Based Path Planning Using Adaptive Operators</h3>
         <div class="venue">International Journal of Innovative Research in Technology (IJIRT), 2025 · K U. Reddy, A. M. Gorte</div>
         <p>A GA-based path planning system for robots navigating dynamic grid/maze environments. Adaptive crossover and mutation operators improve convergence speed and solution accuracy over traditional GA; simulation experiments demonstrate gains in search efficiency and adaptability.</p>
@@ -383,11 +420,11 @@
     </div>
   </section>
 
-  <section class="experience reveal" id="experience">
-    <p class="eyebrow">Path</p>
-    <h2>Experience, Education &amp; Leadership</h2>
+  <section class="experience" id="experience">
+    <p class="eyebrow anim">Path</p>
+    <h2 class="anim">Experience, Education &amp; Leadership</h2>
     <div class="timeline">
-      <div class="job">
+      <div class="job anim">
         <div class="when">Current</div>
         <h3>AI/ML Engineer · Tvara — Bengaluru, India</h3>
         <ul>
@@ -399,23 +436,23 @@
           <li>Integrating AI workflows with cloud infrastructure and scheduled processing.</li>
         </ul>
       </div>
-      <div class="job">
+      <div class="job anim">
         <div class="when">2022 — 2026</div>
         <h3>B.Tech, Artificial Intelligence &amp; Machine Learning Engineering</h3>
-        <p>Sir M Visvesvaraya Institute of Technology (VTU Affiliated), Bengaluru · GPA 8.0/10.0<br />
+        <p>Sir M Visvesvaraya Institute of Technology (VTU Affiliated), Bengaluru · CGPA 8.21/10.0<br />
         Coursework: C++, ML, AI, Python, Data Structures, Operating Systems, MySQL, DevOps, NLP, Git &amp; GitHub.</p>
       </div>
-      <div class="job">
+      <div class="job anim">
         <div class="when">2022 — Present</div>
         <h3>Class Representative</h3>
         <p>Ongoing liaison between faculty and cohort — communication and coordination.</p>
       </div>
-      <div class="job">
+      <div class="job anim">
         <div class="when">Sep 2024</div>
         <h3>Volunteer · TechHub, SMVIT</h3>
         <p>Helped run a 50+ member technical club — the college's annual technical fest, two internal hackathons, and industry-expert workshops.</p>
       </div>
-      <div class="job">
+      <div class="job anim">
         <div class="when">Apr 2023 — Dec 2024</div>
         <h3>Cultural Club Coordinator · Susamskriti, SMVIT</h3>
         <p>Event Management Team and Cultural Club Coordinator — planning and running college cultural events.</p>
@@ -423,23 +460,23 @@
     </div>
   </section>
 
-  <section class="certifications reveal" id="certifications">
-    <p class="eyebrow">Certifications</p>
-    <h2>Continued Learning</h2>
+  <section class="certifications" id="certifications">
+    <p class="eyebrow anim">Certifications</p>
+    <h2 class="anim">Continued Learning</h2>
     <div class="certs">
-      <div class="cert">LLM Engineering: Master AI, Large Language Models &amp; Agents<div class="meta">Udemy · 25.5 hrs · Jul 2025</div></div>
-      <div class="cert">The Complete Agentic AI Engineering Course (2025)<div class="meta">Udemy · 17 hrs · Sep 2025</div></div>
-      <div class="cert">Python Object-Oriented Programming: Beginner to Pro<div class="meta">Udemy · 27 hrs · Sep 2025</div></div>
-      <div class="cert">C++ Data Structures &amp; Algorithms + LeetCode Exercises<div class="meta">Udemy · 10.5 hrs · Sep 2025</div></div>
-      <div class="cert">The Complete C Programming Bootcamp<div class="meta">Udemy · 25 hrs · Apr 2025</div></div>
+      <div class="cert anim">LLM Engineering: Master AI, Large Language Models &amp; Agents<div class="meta">Udemy · 25.5 hrs · Jul 2025</div></div>
+      <div class="cert anim">The Complete Agentic AI Engineering Course (2025)<div class="meta">Udemy · 17 hrs · Sep 2025</div></div>
+      <div class="cert anim">Python Object-Oriented Programming: Beginner to Pro<div class="meta">Udemy · 27 hrs · Sep 2025</div></div>
+      <div class="cert anim">C++ Data Structures &amp; Algorithms + LeetCode Exercises<div class="meta">Udemy · 10.5 hrs · Sep 2025</div></div>
+      <div class="cert anim">The Complete C Programming Bootcamp<div class="meta">Udemy · 25 hrs · Apr 2025</div></div>
     </div>
   </section>
 
-  <section class="contact reveal" id="contact">
-    <p class="eyebrow">Contact</p>
-    <h2>Let's talk</h2>
-    <p>Open to AI/ML engineering roles, research collaborations, and Master's opportunities in systems &amp; machine intelligence. Email is fastest.</p>
-    <div class="social">
+  <section class="contact" id="contact">
+    <p class="eyebrow anim">Contact</p>
+    <h2 class="anim">Let's talk</h2>
+    <p class="anim">Open to AI/ML engineering roles, research collaborations, and Master's opportunities in systems &amp; machine intelligence. Email is fastest.</p>
+    <div class="social anim">
       <a href="mailto:ujjwalreddy07@gmail.com">Email</a>
       <a href="tel:+918296566766">+91 82965 66766</a>
       <a href="https://github.com/Ujjwalreddy16" target="_blank" rel="noopener">GitHub</a>
@@ -449,15 +486,136 @@
 </main>
 
 <footer>
-  © <span id="year"></span> K Ujjwal Reddy · Bengaluru, India · Built with plain HTML &amp; CSS.
+  © <span id="year"></span> K Ujjwal Reddy · Bengaluru, India · Built with HTML, CSS, GSAP &amp; Lenis.
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
 <script>
+(function () {
   document.getElementById("year").textContent = new Date().getFullYear();
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add("in"); });
-  }, { threshold: 0.1 });
-  document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var hasGSAP = typeof gsap !== "undefined";
+
+  /* ---- Lenis smooth scroll ---- */
+  var lenis = null;
+  if (!reduce && typeof Lenis !== "undefined") {
+    lenis = new Lenis({ duration: 1.1, easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); } });
+    window.lenis = lenis;
+    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+    requestAnimationFrame(raf);
+    if (hasGSAP && gsap.ticker) {
+      lenis.on("scroll", function () { if (window.ScrollTrigger) ScrollTrigger.update(); });
+    }
+  }
+
+  /* anchor links -> smooth scroll via Lenis (fallback to native) */
+  document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+    a.addEventListener("click", function (e) {
+      var id = a.getAttribute("href");
+      if (id.length < 2) return;
+      var el = document.querySelector(id);
+      if (!el) return;
+      e.preventDefault();
+      if (lenis) lenis.scrollTo(el, { offset: -70 });
+      else el.scrollIntoView({ behavior: "smooth" });
+      history.replaceState(null, "", id);
+    });
+  });
+
+  /* No GSAP or reduced motion: leave the page as-is (fully visible). */
+  if (reduce || !hasGSAP) return;
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* Now that GSAP is confirmed loaded, hide the to-be-animated elements. */
+  gsap.set(".anim", { opacity: 0, y: 26 });
+  gsap.set(".hero .anim", { y: 34 });
+
+  /* ---- scroll progress bar ---- */
+  gsap.to("#progress", {
+    scaleX: 1, ease: "none",
+    scrollTrigger: { start: 0, end: "max", scrub: 0.3 }
+  });
+
+  /* ---- hero entrance ---- */
+  gsap.timeline({ defaults: { ease: "power3.out", duration: 0.9 } })
+    .to(".hero .anim", { opacity: 1, y: 0, stagger: 0.09, delay: 0.05 });
+
+  /* failsafe: if the hero somehow hasn't shown ~1.5s after load, force it visible */
+  setTimeout(function () {
+    document.querySelectorAll(".hero .anim").forEach(function (el) {
+      if (parseFloat(getComputedStyle(el).opacity) < 0.9) gsap.set(el, { clearProps: "all" });
+    });
+  }, 1600);
+
+  /* ---- hero glow parallax ---- */
+  gsap.to("#glow", {
+    yPercent: 18, ease: "none",
+    scrollTrigger: { trigger: document.body, start: "top top", end: "bottom bottom", scrub: true }
+  });
+
+  /* ---- section reveals ---- */
+  gsap.utils.toArray("main section").forEach(function (sec) {
+    var items = sec.querySelectorAll(".anim");
+    if (!items.length) return;
+    gsap.to(items, {
+      opacity: 1, y: 0, duration: 0.7, ease: "power3.out", stagger: 0.08,
+      scrollTrigger: { trigger: sec, start: "top 78%" }
+    });
+  });
+
+  /* ---- animated stat counters ---- */
+  gsap.utils.toArray(".stat .n").forEach(function (el) {
+    var end = parseFloat(el.getAttribute("data-count"));
+    var decimals = parseInt(el.getAttribute("data-decimals") || "0", 10);
+    var suffix = el.getAttribute("data-suffix") || "";
+    var obj = { v: 0 };
+    ScrollTrigger.create({
+      trigger: el, start: "top 90%", once: true,
+      onEnter: function () {
+        gsap.to(obj, {
+          v: end, duration: 1.4, ease: "power2.out",
+          onUpdate: function () { el.textContent = obj.v.toFixed(decimals) + suffix; }
+        });
+      }
+    });
+  });
+
+  /* ---- active nav link ---- */
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll("nav .links a"));
+  navLinks.forEach(function (link) {
+    var id = link.getAttribute("href");
+    var sec = document.querySelector(id);
+    if (!sec) return;
+    ScrollTrigger.create({
+      trigger: sec, start: "top 45%", end: "bottom 45%",
+      onToggle: function (self) {
+        if (self.isActive) {
+          navLinks.forEach(function (l) { l.classList.remove("active"); });
+          link.classList.add("active");
+        }
+      }
+    });
+  });
+
+  /* ---- magnetic buttons ---- */
+  document.querySelectorAll(".magnetic").forEach(function (btn) {
+    btn.addEventListener("mousemove", function (e) {
+      var r = btn.getBoundingClientRect();
+      var mx = e.clientX - r.left - r.width / 2;
+      var my = e.clientY - r.top - r.height / 2;
+      gsap.to(btn, { x: mx * 0.25, y: my * 0.35, duration: 0.4, ease: "power3.out" });
+    });
+    btn.addEventListener("mouseleave", function () {
+      gsap.to(btn, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.4)" });
+    });
+  });
+
+  ScrollTrigger.refresh();
+})();
 </script>
 </body>
 </html>

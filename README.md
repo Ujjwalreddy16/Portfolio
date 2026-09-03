@@ -1,13 +1,23 @@
 # Portfolio — Ujjwal Reddy
 
-Single-file, dependency-free portfolio site.
+Single-file, dark/modern portfolio site. All CSS/JS is inline; the only external
+dependencies are three CDN scripts for motion (GSAP, ScrollTrigger, Lenis).
 
 ## Files
-- `index.html` — the portfolio (dark/modern, self-contained: inline CSS + JS)
-- `resume.html` — print-friendly one-page résumé. Open in a browser → Print → **Save as PDF** to produce `resume.pdf`
+- `index.html` — the portfolio (inline CSS + JS; CDN scripts for animation)
+- `resume.pdf` — the résumé the site links to (replace with a new file of the same name to update)
+- `resume.html` — print-friendly HTML résumé (open → Print → Save as PDF)
+
+## Motion layer
+- **Lenis** — smooth scrolling
+- **GSAP + ScrollTrigger** — hero entrance, scroll-reveal staggers, glow parallax,
+  animated stat counters, scroll progress bar, active-nav highlighting, magnetic buttons
+
+If the CDN scripts fail to load, or the visitor has "reduce motion" enabled, the
+page falls back to fully visible static content — nothing breaks.
 
 ## Preview locally
-Just open `index.html` in a browser. No build step.
+Open `index.html` in a browser (needs internet for the animation CDNs). No build step.
 
 ## Deploy
 
